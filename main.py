@@ -27,10 +27,29 @@ async def fake_web_server():
 async def heartbeat():
     while True:
         await asyncio.sleep(300)  # просто ждёт 5 минут
+#SelfPING
+async def self_ping():
+    url = os.getenv("https://algo-hub-bot.onrender.com")  # Мы берем URL из переменной окружения
+    if not url:
+        print("❗ Переменная SELF_URL не установлена!")
+        return
+
+    session = aiohttp.ClientSession()
+    while True:
+        try:
+            async with session.get(url) as response:
+                if response.status == 200:
+                    print("✅ Self-ping успешный!")
+                else:
+                    print(f"⚠️ Self-ping ошибка: {response.status}")
+        except Exception as e:
+            print(f"❌ Self-ping ошибка запроса: {e}")
+        await asyncio.sleep(300)  # 5 минут
 
 async def main():
     asyncio.create_task(fake_web_server())  # Запускаем фейковый сервер
     asyncio.create_task(heartbeat())
+    asyncio.create_task(self_ping())
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
