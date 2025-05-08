@@ -23,8 +23,14 @@ async def fake_web_server():
     site = web.TCPSite(runner, "0.0.0.0", port)
     await site.start()
 
+# 🔵 Heartbeat без текста
+async def heartbeat():
+    while True:
+        await asyncio.sleep(300)  # просто ждёт 5 минут
+
 async def main():
     asyncio.create_task(fake_web_server())  # Запускаем фейковый сервер
+    asyncio.create_task(heartbeat())
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
