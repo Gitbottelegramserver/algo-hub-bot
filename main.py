@@ -44,7 +44,7 @@ async def main():
     await asyncio.gather(
         fake_web_server(),
         dp.start_polling(bot),
-        heartbeat()
+        heartbeat(),
         selfping()
     )
 
