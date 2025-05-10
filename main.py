@@ -1,23 +1,20 @@
 import asyncio
 import os
 from aiogram import Bot, Dispatcher
-from aiohttp import web
-import aiohttp
-
 from config import BOT_TOKEN
 from app.handlers.start import router
+from aiohttp import web
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 dp.include_router(router)
 
-# 📡 AIOHTTP Web Server
-async def handle_ping(request):
-    return web.Response(text="OK")
-
-async def start_web_server():
+# Фейковый веб-сервер для Render
+async def fake_web_server():
+    async def handle(request):
+        return web.Response(text="✅ Bot is alive!")
     app = web.Application()
-    app.router.add_get("/", handle_ping)
+    app.router.add_get("/", handle)
     port = int(os.environ.get("PORT", 8080))
     runner = web.AppRunner(app)
     await runner.setup()
@@ -36,13 +33,25 @@ async def self_ping():
             print(f"[Ping Error] {e}")
         await asyncio.sleep(600)
 
-# 🔄 Run everything
+# Опциональный heartbeat
+async def heartbeat():
+    while True:
+        await asyncio.sleep(300)
+
+# 🚀 Главная функция с ОТСТУПОМ!
 async def main():
+    await bot.delete_webhook(drop_pending_updates=True)
     await asyncio.gather(
-        start_web_server(),
+        fake_web_server(),
         dp.start_polling(bot),
-        self_ping()
+        heartbeat()
+        selfping()
     )
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+
+
+
+
