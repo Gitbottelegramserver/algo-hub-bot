@@ -45,7 +45,7 @@ async def main():
         fake_web_server(),
         dp.start_polling(bot),
         heartbeat(),
-        selfping()
+        self_ping()
     )
 
 if __name__ == "__main__":
