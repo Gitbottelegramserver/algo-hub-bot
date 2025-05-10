@@ -29,7 +29,7 @@ async def heartbeat():
         await asyncio.sleep(300)  # просто ждёт 5 минут
 #SelfPING
 async def self_ping():
-    url = os.getenv("https://algo-hub-bot.onrender.com")  # Мы берем URL из переменной окружения
+    url = os.getenv(SELF_URL, "https://algo-hub-bot.onrender.com")  # Мы берем URL из переменной окружения
     if not url:
         print("❗ Переменная SELF_URL не установлена!")
         return
