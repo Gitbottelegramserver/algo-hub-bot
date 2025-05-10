@@ -1,5 +1,6 @@
 import asyncio
 import threading
+import aiohttp
 import os
 from aiogram import Bot, Dispatcher
 from config import BOT_TOKEN
