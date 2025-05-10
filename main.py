@@ -1,51 +1,47 @@
 import asyncio
-import threading
-import aiohttp
 import os
 from aiogram import Bot, Dispatcher
+from aiohttp import web
+import aiohttp
+
 from config import BOT_TOKEN
 from app.handlers.start import router
-
-from aiohttp import web
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 dp.include_router(router)
 
-# Фейковый веб-сервер
-async def fake_web_server():
-    async def handle(request):
-        return web.Response(text="OK")
+# 📡 AIOHTTP Web Server
+async def handle_ping(request):
+    return web.Response(text="OK")
+
+async def start_web_server():
     app = web.Application()
-    app.router.add_get('/', handle)
+    app.router.add_get("/", handle_ping)
     port = int(os.environ.get("PORT", 8080))
     runner = web.AppRunner(app)
     await runner.setup()
     site = web.TCPSite(runner, "0.0.0.0", port)
     await site.start()
 
-# 🔵 Heartbeat без текста
-async def heartbeat():
-    while True:
-        await asyncio.sleep(300)  # просто ждёт 5 минут
-#SelfPING
-async def ping_self():
-    import aiohttp
+# 🔁 Self-ping every 10 minutes
+async def self_ping():
     while True:
         try:
+            url = os.getenv("SELF_URL", "https://algo-hub-bot.onrender.com")
             async with aiohttp.ClientSession() as session:
-                async with session.get("https://algo-hub-bot.onrender.com/") as resp:
-                    print(f"Ping response: {resp.status}")
+                async with session.get(url) as resp:
+                    print(f"Pinged {url} | Status: {resp.status}")
         except Exception as e:
-            print(f"Ping error: {e}")
-        await asyncio.sleep(600)  # раз в 10 минут
+            print(f"[Ping Error] {e}")
+        await asyncio.sleep(600)
 
+# 🔄 Run everything
 async def main():
-    async def main():
     await asyncio.gather(
         start_web_server(),
         dp.start_polling(bot),
-        ping_self()
+        self_ping()
     )
 
 if __name__ == "__main__":
