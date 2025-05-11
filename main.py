@@ -5,7 +5,11 @@ from aiogram import Bot, Dispatcher
 from config import BOT_TOKEN
 from app.handlers.start import router
 from aiohttp import web, ClientSession
+import threading
+from ping import ping_forever
 
+# Запускаем пинг в отдельном потоке
+threading.Thread(target=ping_forever, daemon=True).start()
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
