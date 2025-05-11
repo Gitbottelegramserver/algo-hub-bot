@@ -3,7 +3,8 @@ import os
 from aiogram import Bot, Dispatcher
 from config import BOT_TOKEN
 from app.handlers.start import router
-from aiohttp import web
+from aiohttp import web, ClientSession
+
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
