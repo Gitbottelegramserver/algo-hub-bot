@@ -7,6 +7,8 @@ from app.handlers.start import router
 from aiohttp import web, ClientSession
 import threading
 from ping import ping_forever
+from config import SELF_URL
+
 
 # Запускаем пинг в отдельном потоке
 threading.Thread(target=ping_forever, daemon=True).start()
