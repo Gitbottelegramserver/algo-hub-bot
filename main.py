@@ -24,16 +24,17 @@ async def fake_web_server():
     await site.start()
 
 # 🔁 Self-ping every 10 minutes
+
 async def self_ping():
     while True:
         try:
-            url = os.getenv("SELF_URL", "https://algo-hub-bot.onrender.com")
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url) as resp:
-                    print(f"Pinged {url} | Status: {resp.status}")
+            async with aiohttp.ClientSession(timeout=None) as session:
+                await session.get(SELF_URL)
+                print(f"🔄 Self-ping → {SELF_URL}")
         except Exception as e:
-            print(f"[Ping Error] {e}")
-        await asyncio.sleep(600)
+            print("⚠️ Self-ping error:", e)
+        await asyncio.sleep(300)  # раз в 5 минут
+
 
 # Опциональный heartbeat
 async def heartbeat():
