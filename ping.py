@@ -1,7 +1,7 @@
 import requests
 import time
 
-PING_URL = "https://your-bot-app.onrender.com/"
+PING_URL = "https://algo-hub-bot.onrender.com"
 PING_INTERVAL = 5 * 60  # каждые 5 минут
 
 def ping_forever():
